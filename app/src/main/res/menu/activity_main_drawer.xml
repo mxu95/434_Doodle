@@ -6,6 +6,9 @@
             android:id="@+id/paint_color"
             android:title="Brush Color" />
         <item
+            android:id="@+id/opacity"
+            android:title="Brush Opacity" />
+        <item
             android:id="@+id/paint_width"
             android:title="Brush Width" />
         <item

@@ -1,33 +1,19 @@
 package com.example.laptop.a434_doodle;
 
-import android.annotation.TargetApi;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
-import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
-import android.graphics.Rect;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.graphics.drawable.ShapeDrawable;
-import android.graphics.drawable.StateListDrawable;
 import android.graphics.drawable.shapes.OvalShape;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.support.v4.content.res.ResourcesCompat;
-import android.support.v4.graphics.drawable.DrawableCompat;
-import android.util.Log;
-import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.Toast;
 
@@ -37,6 +23,7 @@ public class MainActivity extends AppCompatActivity
     int brushColorProgress;
     int brushColor;
     int brushWidth;
+    int brushOpacity;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,9 +42,10 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        brushWidth = 10;
+        brushWidth = 20;
         brushColor = Color.BLACK;
         brushColorProgress = 1792;
+        brushOpacity = 255;
     }
 
     @Override
@@ -71,7 +59,6 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-    @TargetApi(16)
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         int id = item.getItemId();
@@ -87,9 +74,10 @@ public class MainActivity extends AppCompatActivity
             colorSeekBar.setMax(1792);
             colorSeekBar.setKeyProgressIncrement(1);
 
-            //Sets the color and progress of the seekbar to match the currently selected color
+            //Sets the color, opacity, and progress of the seekbar to match the currently selected color
             colorSeekBar.setProgress(brushColorProgress);
             colorSeekBar.getProgressDrawable().setColorFilter(brushColor, PorterDuff.Mode.MULTIPLY);
+            colorSeekBar.getProgressDrawable().setAlpha(brushOpacity);
 
             //Sets the size of the thumb to match the currently selected width
             ShapeDrawable thumb = new ShapeDrawable(new OvalShape());
@@ -121,6 +109,7 @@ public class MainActivity extends AppCompatActivity
                     brushColorProgress = colorSeekBar.getProgress();
                     brushColor = progressToColorInt(brushColorProgress);
                     doodleView.setPaintColor(brushColor);
+                    doodleView.setPaintOpacity(brushOpacity);
                 }
             });
             colorDialog.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
@@ -131,6 +120,58 @@ public class MainActivity extends AppCompatActivity
 
             colorDialog.setView(colorSeekBar);
             colorDialog.show();
+        } else if (id == R.id.opacity) {
+            final AlertDialog.Builder opacityDialog = new AlertDialog.Builder(this);
+            opacityDialog.setTitle("Brush Opacity").setMessage("Select your brush opacity:");
+
+            final SeekBar opacitySeekBar = new SeekBar(this);
+            opacitySeekBar.setMax(255);
+            opacitySeekBar.setKeyProgressIncrement(1);
+            opacitySeekBar.setMinimumHeight(100);
+
+            //Sets the color, opacity, and progress of the seekbar to match the currently selected color
+            opacitySeekBar.setProgress(brushOpacity);
+            opacitySeekBar.getProgressDrawable().setColorFilter(brushColor, PorterDuff.Mode.MULTIPLY);
+            opacitySeekBar.getProgressDrawable().setAlpha(brushOpacity);
+
+            //Sets the size of the thumb to match the currently selected width
+            ShapeDrawable thumb = new ShapeDrawable(new OvalShape());
+            thumb.setIntrinsicHeight(brushWidth);
+            thumb.setIntrinsicWidth(brushWidth);
+            opacitySeekBar.setThumb(thumb);
+
+            opacitySeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+                @Override
+                public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                    seekBar.getProgressDrawable().setAlpha(progress);
+                }
+
+                @Override
+                public void onStartTrackingTouch(SeekBar seekBar) {
+                    //do nothing
+                }
+
+                @Override
+                public void onStopTrackingTouch(SeekBar seekBar) {
+                    //do nothing
+                }
+            });
+
+            opacityDialog.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int which) {
+                    //stores progress and color ints to restore to this position when Paint Color is selected again later
+                    brushOpacity = opacitySeekBar.getProgress();
+                    doodleView.setPaintOpacity(brushOpacity);
+                }
+            });
+            opacityDialog.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int which) {
+                    //do nothing
+                }
+            });
+
+            opacityDialog.setView(opacitySeekBar);
+            opacityDialog.show();
         } else if (id == R.id.paint_width) {
             // Handle Paint Color action by popping up an alertdialog with a seekbar to choose color
             final AlertDialog.Builder widthDialog = new AlertDialog.Builder(this);
@@ -139,13 +180,14 @@ public class MainActivity extends AppCompatActivity
             final SeekBar widthSeekBar = new SeekBar(this);
             widthSeekBar.setMax(100);
             widthSeekBar.setKeyProgressIncrement(1);
-            widthSeekBar.setProgress(brushWidth);
+            widthSeekBar.setMinimumHeight(100);
 
-            //Sets the color of the seekbar to match the currently selected color
+            //Sets the color and opacity of the seekbar to match the currently selected color
             widthSeekBar.getProgressDrawable().setColorFilter(brushColor, PorterDuff.Mode.MULTIPLY);
+            widthSeekBar.getProgressDrawable().setAlpha(brushOpacity);
 
-
-            //Sets the size of the thumb to match the currently selected width
+            //Sets the progress and size of the thumb to match the currently selected width
+            widthSeekBar.setProgress(brushWidth);
             ShapeDrawable thumb = new ShapeDrawable(new OvalShape());
             thumb.setIntrinsicHeight(brushWidth);
             thumb.setIntrinsicWidth(brushWidth);

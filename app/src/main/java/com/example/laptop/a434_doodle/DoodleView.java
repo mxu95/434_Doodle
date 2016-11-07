@@ -60,6 +60,10 @@ public class DoodleView extends View {
         paintDoodle.setStrokeWidth(width);
     }
 
+    public void setPaintOpacity(int opacity) {
+        paintDoodle.setAlpha(opacity);
+    }
+
     public boolean undo() {
         if(paints.size() >= 1) {
             undonePaints.push(paints.get(paints.size() - 1));
