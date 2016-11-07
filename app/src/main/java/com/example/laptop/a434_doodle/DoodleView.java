@@ -84,6 +84,14 @@ public class DoodleView extends View {
         }
     }
 
+    public void clear(){
+        paints = new ArrayList<Paint>();
+        paths = new ArrayList<Path>();
+        undonePaints = new Stack<Paint>();
+        undonePaths = new Stack<Path>();
+        invalidate();
+    }
+
     @Override
     public void onDraw(Canvas canvas) {
         super.onDraw(canvas);

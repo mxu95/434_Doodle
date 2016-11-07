@@ -14,5 +14,8 @@
         <item
             android:id="@+id/redo"
             android:title="Redo" />
+        <item
+            android:id="@+id/clear"
+            android:title="Clear" />
     </group>
 </menu>

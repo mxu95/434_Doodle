@@ -195,6 +195,22 @@ public class MainActivity extends AppCompatActivity
             if(!doodleView.redo()) {
                 Toast.makeText(this, "Nothing left to redo", Toast.LENGTH_SHORT).show();
             }
+        }  else if (id == R.id.clear) {
+            final AlertDialog.Builder clearDialog = new AlertDialog.Builder(this);
+            clearDialog.setTitle("Clear").setMessage("Are you sure you want to clear your canvas?");
+            clearDialog.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    doodleView.clear();
+                }
+            });
+            clearDialog.setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    //do nothing
+                }
+            });
+            clearDialog.show();
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
