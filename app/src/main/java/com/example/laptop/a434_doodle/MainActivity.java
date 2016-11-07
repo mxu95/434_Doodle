@@ -189,11 +189,11 @@ public class MainActivity extends AppCompatActivity
             widthDialog.show();
         } else if (id == R.id.undo) {
             if(!doodleView.undo()) {
-                Toast.makeText(this, "Everything is already undone", Toast.LENGTH_SHORT);
+                Toast.makeText(this, "Nothing left to undo", Toast.LENGTH_SHORT).show();
             }
         } else if (id == R.id.redo) {
             if(!doodleView.redo()) {
-                Toast.makeText(this, "Everything is already redone", Toast.LENGTH_SHORT);
+                Toast.makeText(this, "Nothing left to redo", Toast.LENGTH_SHORT).show();
             }
         }
 
