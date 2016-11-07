@@ -8,5 +8,11 @@
         <item
             android:id="@+id/paint_width"
             android:title="Brush Width" />
+        <item
+            android:id="@+id/undo"
+            android:title="Undo" />
+        <item
+            android:id="@+id/redo"
+            android:title="Redo" />
     </group>
 </menu>
